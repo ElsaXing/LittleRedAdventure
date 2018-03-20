@@ -75,7 +75,6 @@ public class EnemyPhysicsObject : MonoBehaviour {
 
 
 		grounded = false;
-		Debug.Log (velocity.y);
 
 
 		animator.SetFloat ("velocityY", velocity.y);

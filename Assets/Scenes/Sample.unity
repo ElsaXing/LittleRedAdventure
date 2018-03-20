@@ -11450,6 +11450,11 @@ Prefab:
       propertyPath: Background2.Array.data[0]
       value: 
       objectReference: {fileID: 823303310}
+    - target: {fileID: 114112848840523214, guid: 9a42e4808b427124c90419e389b856dc,
+        type: 2}
+      propertyPath: attackTime
+      value: 0.5
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 9a42e4808b427124c90419e389b856dc, type: 2}
   m_IsPrefabParent: 0

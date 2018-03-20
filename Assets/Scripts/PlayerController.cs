@@ -9,14 +9,19 @@ public class PlayerController : PlayerPhysicsObject {
 	public GameObject[] Background2;
 	public float backgroundSpeed1;
 	public float backgroundSpeed2;
+	public float attackTime = 0.5f;
 
 	private SpriteRenderer spriteRenderer;
 	private Animator animator;
+	private float lastAttackTime;
+
 
 	// Use this for initialization
 	void Awake () {
 		spriteRenderer = GetComponent<SpriteRenderer> ();
 		animator = GetComponent<Animator> ();
+
+		lastAttackTime = 0f;
 	}
 
 	protected override void ComputeVelocity () {
@@ -64,6 +69,11 @@ public class PlayerController : PlayerPhysicsObject {
 	}
 
 
-
+	protected override void Action () {
+		if (Input.GetAxis ("Fire1") == 1 && Time.time - lastAttackTime > attackTime) {
+			animator.SetTrigger ("playerAttack");
+			lastAttackTime = Time.time;
+		}
+	}
 
 }

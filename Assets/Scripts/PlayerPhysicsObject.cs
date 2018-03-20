@@ -35,10 +35,15 @@ public class PlayerPhysicsObject : MonoBehaviour {
 	void Update () {
 		targetVelocity = Vector2.zero;
 		ComputeVelocity ();
+		Action ();
 	}
 
 	protected virtual void ComputeVelocity () {
 		
+	}
+
+	protected virtual void Action () {
+
 	}
 
 	void FixedUpdate() {
