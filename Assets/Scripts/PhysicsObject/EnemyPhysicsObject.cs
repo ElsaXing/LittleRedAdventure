@@ -7,6 +7,7 @@ public class EnemyPhysicsObject : MonoBehaviour {
 	public float gravityModifier = 1f;
 	public float characterVelocity = 7;
 	public float jumpTakeOffSpeed = 7;
+	public float moveRange = 3;
 
 	protected bool grounded;
 	protected Vector2 groundNormal;
@@ -21,15 +22,17 @@ public class EnemyPhysicsObject : MonoBehaviour {
 
 	private float lastDirectionChangeTime;
 	private readonly float directionChangeTime = 2f;
-	private int movementDirection;
+	private float movementDirection;
 	private SpriteRenderer spriteRenderer;
 	private Animator animator;
+	private Vector3 spawnPoint;
 
 
 	void OnEnable () {
 		rb2d = GetComponent<Rigidbody2D> ();
 		animator = GetComponent<Animator> ();
 		spriteRenderer = GetComponent<SpriteRenderer> ();
+
 	}
 
 	void Start () {
@@ -37,34 +40,43 @@ public class EnemyPhysicsObject : MonoBehaviour {
 		contactFilter.SetLayerMask (Physics2D.GetLayerCollisionMask (gameObject.layer));
 		contactFilter.useLayerMask = true;
 
+		spawnPoint = rb2d.position;
 
 		lastDirectionChangeTime = 0f;
-		RandomDirection ();
+		ChangeDirection ();
 	}
+
 
 	// Update is called once per frame
 	void Update () {
-		if (Time.time - lastDirectionChangeTime > directionChangeTime) {
-			lastDirectionChangeTime = Time.time;
-			RandomDirection ();
-		}
-
-		if (velocity.y < -4 || velocity.y > 4) {
-			RandomDirection ();
-		}
+		ChangeDirection ();
 	}
 
-	protected virtual void RandomDirection () {
-		movementDirection = Random.Range (-2, 2);
+	protected virtual void ChangeDirection () {
+		float distance = Vector3.Distance (rb2d.position, spawnPoint);
 
+		if (Time.time - lastDirectionChangeTime < directionChangeTime && Mathf.Abs (velocity.y) < 4.5 && distance < moveRange) {
+			return;
+		}
+
+		lastDirectionChangeTime = Time.time;
+
+		if (Mathf.Abs(velocity.y) < 4.5 && distance < moveRange) {
+			movementDirection = Random.Range (-1f, 1f);
+			if (movementDirection > 0f) {
+				movementDirection = 1f;
+			} else if (movementDirection < -0f) {
+				movementDirection = -1f;
+			}
+		} else {
+			movementDirection = - movementDirection;
+			velocity.y = velocity.y / 2;
+		}
+			
 		if (movementDirection < 0.01f) {
-			if (spriteRenderer.flipX == true) {
-				spriteRenderer.flipX = false;
-			}
+			spriteRenderer.flipX = true;	
 		} else if (movementDirection > -0.01f) {
-			if (spriteRenderer.flipX == false) {
-				spriteRenderer.flipX = true;
-			}
+			spriteRenderer.flipX = false;
 		}
 	}
 
@@ -77,7 +89,7 @@ public class EnemyPhysicsObject : MonoBehaviour {
 		grounded = false;
 
 
-		animator.SetFloat ("velocityY", velocity.y);
+		animator.SetFloat ("slimeVelocityY", velocity.y);
 		Vector2 move = velocity * Time.deltaTime;
 
 		Movement (move, false);
@@ -127,4 +139,6 @@ public class EnemyPhysicsObject : MonoBehaviour {
 
 		rb2d.position = rb2d.position + move.normalized * distance;
 	}
+
+
 }

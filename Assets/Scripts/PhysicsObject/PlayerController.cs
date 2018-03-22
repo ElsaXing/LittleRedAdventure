@@ -38,13 +38,9 @@ public class PlayerController : PlayerPhysicsObject {
 		}
 
 		if (move.x > 0.01f) {
-			if (spriteRenderer.flipX == true) {
-				spriteRenderer.flipX = false;
-			}
+			spriteRenderer.flipX = false;
 		} else if (move.x < -0.01f) {
-			if (spriteRenderer.flipX == false) {
-				spriteRenderer.flipX = true;
-			}
+			spriteRenderer.flipX = true;
 		}
 
 		animator.SetBool ("grounded", grounded);
@@ -58,7 +54,7 @@ public class PlayerController : PlayerPhysicsObject {
 		foreach (GameObject background in Background1) {
 			Vector3 deltaMove = Vector3.zero;
 			deltaMove.x = Camera.main.velocity.x * Time.deltaTime * backgroundSpeed1;
-			background.transform.position = background.transform.position + deltaMove;
+			background.transform.position +=  deltaMove;
 		}
 
 		foreach (GameObject background in Background2) {
@@ -73,6 +69,10 @@ public class PlayerController : PlayerPhysicsObject {
 		if (Input.GetAxis ("Fire1") == 1 && Time.time - lastAttackTime > attackTime) {
 			animator.SetTrigger ("playerAttack");
 			lastAttackTime = Time.time;
+			GameObject[] enemys = GameObject.FindGameObjectsWithTag("Enemy");
+			foreach (GameObject enemy in enemys) {
+				
+			}
 		}
 	}
 
